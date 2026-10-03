@@ -1,4 +1,4 @@
-# Mundo dos Blocos de Tamanho Variável
+### Mundo dos Blocos de Tamanho Variável
 
 Fundamentos de Inteligência Artificial - UFAM / ICOMP
 
@@ -10,7 +10,8 @@ O objetivo é mover blocos de comprimentos diferentes sem colisões e com apoio 
 
 ## 2. Descrição Formal do Mundo dos Blocos de Tamanho Variado
 
-**Domínio em LPO.** Os blocos são `B={a,b,c,d}`, com `len(a)=1`, `len(b)=1`, `len(c)=2` e `len(d)=3`. A mesa é `T`. Há sete pontos, de 0 a 6, e seis slots: `s0=[0,1]`, ..., `s5=[5,6]`. Um bloco em `p` cobre os slots de `p` até `p+len(b)-1`. As posições válidas são `0 <= p <= 6-len(b)` e os níveis vão de 0 a 3; nível 0 significa mesa. Blocos que apenas encostam pelas bordas não compartilham slots.
+### Domínio em LPO. 
+Os blocos são `B={a,b,c,d}`, com `len(a)=1`, `len(b)=1`, `len(c)=2` e `len(d)=3`. A mesa é `T`. Há sete pontos, de 0 a 6, e seis slots: `s0=[0,1]`, ..., `s5=[5,6]`. Um bloco em `p` cobre os slots de `p` até `p+len(b)-1`. As posições válidas são `0 <= p <= 6-len(b)` e os níveis vão de 0 a 3; nível 0 significa mesa. Blocos que apenas encostam pelas bordas não compartilham slots.
 
 | Predicado    | Significado no instante t                      |
 | ------------ | ---------------------------------------------- |
@@ -21,9 +22,11 @@ O objetivo é mover blocos de comprimentos diferentes sem colisões e com apoio 
 
 Cada bloco possui exatamente uma posição e um nível. Definimos `cov(b,s,l,t)` como `lev(b,l,t)` e a existência de `p` com `at(b,p,t)` e `p <= s < p+len(b)`. Para blocos, `on(b,y,t)` vale se estão em níveis consecutivos e compartilham ao menos um slot; `on(b,T,t)` equivale a `lev(b,0,t)`. `clr(b,t)` vale se não existe outro bloco em nível maior cobrindo algum slot de b. Essas condições são quantificadas sobre todos os blocos e instantes do domínio.
 
-**Estabilidade.** Para todo bloco acima da mesa, pelo menos `ceil(len(b)/2)` slots sob ele devem estar ocupados no nível imediatamente inferior. Assim, a e b precisam de 1 slot de apoio, c de 1 e d de 2. Conta-se o conjunto de slots apoiados, permitindo a ponte de d sobre a e b com um vão no meio.
+### Estabilidade. 
+Para todo bloco acima da mesa, pelo menos `ceil(len(b)/2)` slots sob ele devem estar ocupados no nível imediatamente inferior. Assim, a e b precisam de 1 slot de apoio, c de 1 e d de 2. Conta-se o conjunto de slots apoiados, permitindo a ponte de d sobre a e b com um vão no meio.
 
-**Ação:** `move(b,y,p,t)` coloca b sobre y a partir de p. Exige b livre, posição válida, destino diferente do atual, espaço no destino e acima dele, além da estabilidade após o movimento. Se y é bloco, deve haver sobreposição horizontal e o novo nível é `nivel(y)+1`; se y é a mesa, é 0. Uma ação ocorre por passo, sem transportar outros blocos.
+### Ação: 
+`move(b,y,p,t)` coloca b sobre y a partir de p. Exige b livre, posição válida, destino diferente do atual, espaço no destino e acima dele, além da estabilidade após o movimento. Se y é bloco, deve haver sobreposição horizontal e o novo nível é `nivel(y)+1`; se y é a mesa, é 0. Uma ação ocorre por passo, sem transportar outros blocos.
 
 Para reproduzir os blocos lado a lado nas figuras, substituímos `clr(y)` do manual por espaço livre na região utilizada do apoio. O bloco movido continua exigindo `clr` e não pode ser colocado sob outro bloco, inclusive no vão de uma ponte.
 
@@ -33,11 +36,12 @@ Para reproduzir os blocos lado a lado nas figuras, substituímos `clr(y)` do man
 | Deletes     | Posição e nível antigos quando diferentes, apoios perdidos e `clr` dos apoios agora cobertos.                         |
 | Permanência | Posição e nível dos demais blocos; comprimentos, mesa, pontos e slots não mudam. `clr` e `on` acompanham a geometria. |
 
-**Ordem parcial:** `A -- P --> B` significa que A estabelece a condição P necessária a B, preservada entre as duas ações. Na Situação 1, chamar os quatro movimentos manuais de A1 a A4 dá: `A1 -- clr(a) --> A2`, `A2 -- slot s3 livre na mesa --> A3` e `A3 -- clr(c) --> A4`. Movimentos sem dependência podem trocar de ordem. As pré-condições e a permanência representam essas dependências; o SAT produz uma sequência compatível, sem receber o plano manual como restrição.
+### Ordem parcial:
+ `A -- P --> B` significa que A estabelece a condição P necessária a B, preservada entre as duas ações. Na Situação 1, chamar os quatro movimentos manuais de A1 a A4 dá: `A1 -- clr(a) --> A2`, `A2 -- slot s3 livre na mesa --> A3` e `A3 -- clr(c) --> A4`. Movimentos sem dependência podem trocar de ordem. As pré-condições e a permanência representam essas dependências; o SAT produz uma sequência compatível, sem receber o plano manual como restrição.
 
 Por exemplo, na Situação 2 automática, após colocar c sobre d, os movimentos finais de a e b podem trocar de ordem, pois usam slots distintos de c.
 
-## 3. Codificação CNF
+### 3. Codificação CNF
 
 Substituímos as variáveis da LPO pelos blocos, posições, níveis e instantes possíveis. Cada átomo vira uma variável booleana numerada. Usamos `at`, `lev`, `clr` e `move`, além das auxiliares `pos(b,p,l,t)` (posição e nível juntos) e `occ(s,l,t)` (slot ocupado). `on` é reconstruído, sem variável própria. Os horizontes são H=4, 5 e 6, com estados de 0 a H e ações de 0 a H-1.
 
@@ -64,7 +68,8 @@ Em cada par `(p,l)`, leia `at(bloco,p,t) AND lev(bloco,l,t)`. Todos os pares da 
 | 2: S5             | (4,2) | (5,2) | (4,1) | (3,0) |
 | 3: S7             | (0,1) | (1,1) | (0,0) | (3,0) |
 
-**Planos manuais.** Na tabela, `move(b,y,p)` omite apenas o instante, que é o número do passo menos 1. O par após a seta é a nova posição e nível do bloco movido; os outros permanecem iguais. Isso permite acompanhar todos os estados até a meta.
+### Planos manuais.
+ Na tabela, `move(b,y,p)` omite apenas o instante, que é o número do passo menos 1. O par após a seta é a nova posição e nível do bloco movido; os outros permanecem iguais. Isso permite acompanhar todos os estados até a meta.
 
 | Passo | Situação 1            | Situação 2            | Situação 3            |
 | ----- | --------------------- | --------------------- | --------------------- |
@@ -77,7 +82,7 @@ Em cada par `(p,l)`, leia `at(bloco,p,t) AND lev(bloco,l,t)`. Todos os pares da 
 
 Nas Situações 1 e 3, a vai temporariamente sobre b: deixá-lo em p=4 na mesa, como no exemplo do manual, impediria d de ocupar `[2,5]`. Na Situação 3, S5 e S6 desenham a mesma configuração; não é necessário inserir um movimento vazio.
 
-**Comparação com as execuções reais:**
+### Comparação com as execuções reais:
 
 | Situação | Manual / solver | Comparação                                                                                                                                      |
 | -------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
