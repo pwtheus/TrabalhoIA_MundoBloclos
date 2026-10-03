@@ -41,7 +41,7 @@ Para reproduzir os blocos lado a lado nas figuras, substituímos `clr(y)` do man
 
 Por exemplo, na Situação 2 automática, após colocar c sobre d, os movimentos finais de a e b podem trocar de ordem, pois usam slots distintos de c.
 
-*** 3. Codificação CNF
+** 3. Codificação CNF
 
 Substituímos as variáveis da LPO pelos blocos, posições, níveis e instantes possíveis. Cada átomo vira uma variável booleana numerada. Usamos `at`, `lev`, `clr` e `move`, além das auxiliares `pos(b,p,l,t)` (posição e nível juntos) e `occ(s,l,t)` (slot ocupado). `on` é reconstruído, sem variável própria. Os horizontes são H=4, 5 e 6, com estados de 0 a H e ações de 0 a H-1.
 
