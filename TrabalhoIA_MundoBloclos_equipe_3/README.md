@@ -2,7 +2,7 @@
 
 Fundamentos de Inteligência Artificial - UFAM / ICOMP
 
-**Integrantes:** Camila dos Santos Soares; Daniel Nunes Santos; Fernando Reis; Nicoly Lima de Souza; Pedro Matheus Melo Pereira; Pedro Vinícius Diaz de Alencar.
+**Integrantes:** Camila dos Santos Soares; Daniel Nunes Santos; Fernando Teles Reis; Nicoly Lima de Souza; Pedro Matheus Melo Pereira; Pedro Vinícius Diaz de Alencar.
 
 ** 1. Introdução ao Problema
 
